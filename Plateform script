@@ -1,0 +1,35 @@
+-- Roblox Moving Brick Script with Stop and Go Commands
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local brick = Instance.new("Part")
+brick.Size = Vector3.new(10, 1, 10)  -- Adjust the size as needed
+brick.Anchored = true
+
+local function moveBrick()
+    brick.Position = character.HumanoidRootPart.Position + Vector3.new(0, -5, 0)  -- Adjust the height as needed
+end
+
+local function createBrick()
+    brick.Parent = game.Workspace
+end
+
+local function deleteBrick()
+    brick:Destroy()
+end
+
+game:GetService("RunService").Stepped:Connect(moveBrick)
+
+game.Players.LocalPlayer.Chatted:Connect(function(message)
+    if message == ".stop" then
+        deleteBrick()
+    elseif message == ".go" then
+        createBrick()
+    end
+end)
+
+while true do
+    wait(0)  -- Adjust the time interval between movements if needed
+    moveBrick()
+end
