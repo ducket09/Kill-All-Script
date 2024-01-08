@@ -10,4 +10,4 @@ COMMANDS:
 
 .team [team name] --Will only target team.
 
-.team -- Will stop targeting chossen team an tp to everyone like normal.
+.team -- Will stop targeting chossen team and tp to everyone like normal.
