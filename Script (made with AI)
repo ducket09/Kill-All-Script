@@ -1,0 +1,55 @@
+-- Fixed Offset Mischief Teleport Script
+local yOffset = -11  -- You can adjust this value to your liking
+local targetTeam = nil
+local scriptEnabled = true
+
+-- Function to teleport to players on a specific team
+local function teleportToTeam(teamName)
+    targetTeam = teamName
+    if targetTeam == "" then
+        targetTeam = nil  -- Revert to teleporting to everyone
+    end
+    print(targetTeam and "Teleporting to players on team:" or "Teleporting to all players")
+end
+
+-- Function to handle player commands
+local function handlePlayerCommands(message)
+    if message:lower():sub(1, 5) == ".team" then
+        local teamName = message:sub(7)
+        teleportToTeam(teamName)
+    elseif message:lower() == ".stop" then
+        scriptEnabled = false
+        print("Script stopped")
+    elseif message:lower() == ".go" then
+        scriptEnabled = true
+        print("Script resumed")
+    end
+end
+
+-- Command to set the target team and control script execution
+game.Players.LocalPlayer.Chatted:Connect(function(message)
+    handlePlayerCommands(message)
+end)
+
+while true do
+    if scriptEnabled then
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and not player.Character:FindFirstChild("ForceField") and player.Character:FindFirstChild("Humanoid").Health > 0 then
+                -- Check if the player is on the target team (if specified)
+                if not targetTeam or (player.Team and player.Team.Name == targetTeam) then
+                    while scriptEnabled and player.Character:FindFirstChild("Humanoid") and player.Character:FindFirstChild("Humanoid").Health > 0 do
+                        -- Teleport to the player with the adjusted y-offset
+                        game.Players.LocalPlayer.Character:MoveTo(Vector3.new(player.Character.HumanoidRootPart.Position.X, player.Character.HumanoidRootPart.Position.Y + yOffset, player.Character.HumanoidRootPart.Position.Z))
+                        
+                        -- A quick pause before teleporting again
+                        wait(0)
+                    end
+                end
+            end
+            -- A brief pause before moving on to the next player
+            wait(0)
+        end
+    else
+        wait(1)  -- Pause when the script is stopped
+    end
+end
