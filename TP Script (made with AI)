@@ -1,7 +1,7 @@
 -- Fixed Offset Mischief Teleport Script
 local yOffset = -11  -- You can adjust this value to your liking
 local targetTeam = nil
-local scriptEnabled = false
+local scriptEnabled = true
 
 -- Function to teleport to players on a specific team
 local function teleportToTeam(teamName)
